@@ -1,0 +1,58 @@
+{
+  "name": "@opspilot/chat-sdk",
+  "version": "1.0.0",
+  "description": "TypeScript chat SDK with React components for AI agents",
+  "private": true,
+  "workspaces": [
+    "packages/@opspilot/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:ui": "pnpm -r test:ui",
+    "test:coverage": "pnpm -r test:coverage",
+    "lint": "eslint packages --ext .ts,.tsx",
+    "format": "prettier --write packages/**/*.{ts,tsx,json,md}",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "example": "pnpm --filter basic-react-example dev",
+    "restart": "./restart.sh",
+    "kill-ports": "lsof -ti:5173,5174,5175,5176,5177,5178,5179,5180 | xargs kill -9 || true"
+  },
+  "keywords": [
+    "chat",
+    "ai",
+    "react",
+    "typescript",
+    "sse",
+    "streaming",
+    "opspilot"
+  ],
+  "author": "OpsPilot Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opspilot/chat-sdk"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
+  "packageManager": "pnpm@8.0.0"
+}
