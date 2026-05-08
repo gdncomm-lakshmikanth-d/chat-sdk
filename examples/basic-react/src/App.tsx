@@ -19,10 +19,10 @@ function App() {
 
   // Agent API client for your endpoint
   const agentClient = createAgentChatClient({
-    baseUrl: process.env.AGENT_API_BASE_URL || "http://localhost:9095",
-    team: process.env.AGENT_API_TEAM || "gdn-tms",
+    baseUrl: import.meta.env.VITE_AGENT_API_BASE_URL || "http://localhost:9095",
+    team: import.meta.env.VITE_AGENT_API_TEAM || "gdn-tms",
     // headers: { 
-    //   "Authorization": `Bearer ${process.env.AGENT_API_TOKEN}` // Add if needed
+    //   "Authorization": `Bearer ${import.meta.env.VITE_AGENT_API_TOKEN}` // Add if needed
     // }
   });
 
@@ -30,7 +30,7 @@ function App() {
   const realClient = createChatClient({
     baseUrl: "https://api.example.com", // Replace with your actual backend
     headers: { 
-      "Authorization": `Bearer ${process.env.REACT_APP_API_TOKEN}` // Add your auth token
+      "Authorization": `Bearer ${import.meta.env.VITE_API_TOKEN}` // Add your auth token
     }
   });
 
@@ -142,7 +142,7 @@ function App() {
               fontSize: '0.9rem',
               margin: '1rem 0 0 0'
             }}>
-              ✅ Configured for your Agent API (check .env.example for configuration)
+              ✅ Configured for your Agent API (create .env file from .env.example for custom configuration)
             </p>
           )}
           

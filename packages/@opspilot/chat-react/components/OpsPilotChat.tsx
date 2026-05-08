@@ -434,14 +434,79 @@ function TypingIndicator() {
   );
 }
 
-// Simple markdown-like formatter for assistant messages
+// Enhanced markdown-like formatter for assistant messages
 function formatMessage(content: string): React.ReactNode[] {
   if (!content) return [];
   
+  // Pre-process content to clean up file paths
+  console.log('🔍 Original content contains file paths:', content.includes('📁 File:'));
+  
+  const originalContent = content;
+  content = content.replace(/📁 File: `([^`]+)`/g, (match, fullPath) => {
+    const filename = fullPath.split('/').pop() || fullPath;
+    console.log('🎯 Processed file path (backticks):', fullPath, '→', filename);
+    return `📁 File: \`${filename}\``;
+  });
+  
+  content = content.replace(/📁 File: ([^\n]+)/g, (match, fullPath) => {
+    const filename = fullPath.split('/').pop() || fullPath;
+    console.log('🎯 Processed file path (no backticks):', fullPath, '→', filename);
+    return `📁 File: ${filename}`;
+  });
+  
+  if (originalContent !== content) {
+    console.log('✅ File paths were processed and shortened');
+  }
+  
   const lines = content.split('\n');
   const elements: React.ReactNode[] = [];
+  let inCodeBlock = false;
+  let codeBlockContent: string[] = [];
+  let codeBlockLang = '';
   
-  lines.forEach((line, index) => {
+  for (let index = 0; index < lines.length; index++) {
+    const line = lines[index];
+    
+    // Handle code blocks
+    if (line.startsWith('```')) {
+      if (inCodeBlock) {
+        // End of code block
+        elements.push(
+          <div key={`code-${index}`} style={{
+            background: '#0d1117',
+            border: '1px solid #21262d',
+            borderRadius: '8px',
+            padding: '16px',
+            marginBottom: '12px',
+            overflow: 'auto'
+          }}>
+            <code style={{
+              fontFamily: "'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', 'Courier New', monospace",
+              fontSize: '13px',
+              lineHeight: '1.6',
+              color: '#e6edf3',
+              whiteSpace: 'pre'
+            }}>
+              {codeBlockContent.join('\n')}
+            </code>
+          </div>
+        );
+        inCodeBlock = false;
+        codeBlockContent = [];
+        codeBlockLang = '';
+      } else {
+        // Start of code block
+        inCodeBlock = true;
+        codeBlockLang = line.slice(3).trim();
+      }
+      continue;
+    }
+    
+    if (inCodeBlock) {
+      codeBlockContent.push(line);
+      continue;
+    }
+    
     let formattedLine: React.ReactNode = line;
     
     // Handle bold text **text**
@@ -450,6 +515,28 @@ function formatMessage(content: string): React.ReactNode[] {
       formattedLine = parts.map((part, i) => {
         if (part.startsWith('**') && part.endsWith('**')) {
           return <strong key={i} style={{ color: '#e6edf3', fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+        }
+        return part;
+      });
+    }
+    
+    // Handle inline code `code`
+    if (typeof formattedLine === 'string' && formattedLine.includes('`')) {
+      const parts = formattedLine.split(/(`.*?`)/);
+      formattedLine = parts.map((part, i) => {
+        if (part.startsWith('`') && part.endsWith('`')) {
+          return (
+            <code key={i} style={{
+              background: 'rgba(110, 118, 129, 0.4)',
+              padding: '2px 6px',
+              borderRadius: '4px',
+              fontFamily: "'SF Mono', monospace",
+              fontSize: '12px',
+              color: '#e6edf3'
+            }}>
+              {part.slice(1, -1)}
+            </code>
+          );
         }
         return part;
       });
@@ -470,7 +557,55 @@ function formatMessage(content: string): React.ReactNode[] {
           {formattedLine}
         </div>
       );
-    } else if (line.startsWith('**📋') || line.startsWith('**💡')) {
+    } else if (line.startsWith('### ')) {
+      elements.push(
+        <div key={index} style={{ 
+          fontSize: '18px',
+          fontWeight: 700,
+          color: '#e6edf3',
+          marginTop: '20px',
+          marginBottom: '12px',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          paddingBottom: '8px'
+        }}>
+          {formattedLine.slice(4)}
+        </div>
+      );
+    } else if (line.startsWith('📁 File:') || line.startsWith('📦 Repository:')) {
+      // Extract just the filename from the full path
+      let displayText = formattedLine;
+      if (typeof displayText === 'string' && line.startsWith('📁 File:')) {
+        const fullPath = line.substring(9).trim(); // Remove "📁 File: "
+        const fileName = fullPath.split('/').pop() || fullPath;
+        displayText = `📁 File: ${fileName}`;
+      }
+      
+      elements.push(
+        <div key={index} style={{ 
+          fontSize: '13px',
+          color: '#8b949e',
+          fontFamily: "'SF Mono', monospace",
+          marginBottom: '4px',
+          padding: '4px 8px',
+          background: 'rgba(255,255,255,0.02)',
+          borderRadius: '4px'
+        }}>
+          {displayText}
+        </div>
+      );
+    } else if (line.startsWith('💻 Code:')) {
+      elements.push(
+        <div key={index} style={{ 
+          fontSize: '14px',
+          color: '#58a6ff',
+          fontWeight: 600,
+          marginTop: '8px',
+          marginBottom: '4px'
+        }}>
+          {formattedLine}
+        </div>
+      );
+    } else if (line.startsWith('**📋') || line.startsWith('**💡') || line.startsWith('🔍')) {
       elements.push(
         <div key={index} style={{ 
           fontSize: '14px',
@@ -501,7 +636,7 @@ function formatMessage(content: string): React.ReactNode[] {
         </div>
       );
     }
-  });
+  }
   
   return elements;
 }

@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@opspilot/chat-core': path.resolve(__dirname, '../../packages/@opspilot/chat-core'),
-      '@opspilot/chat-react': path.resolve(__dirname, '../../packages/@opspilot/chat-react'),
+      '@opspilot/chat-core': path.resolve(__dirname, '../../packages/@opspilot/chat-core/dist/index.mjs'),
+      '@opspilot/chat-react': path.resolve(__dirname, '../../packages/@opspilot/chat-react/dist/index.mjs'),
     },
   },
 });
