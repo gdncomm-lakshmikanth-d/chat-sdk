@@ -1,0 +1,39 @@
+examples/basic-react/src/App-test.tsx
+  b1b61a4ad4c261bf 1-86
+examples/basic-react/.env.example
+  b1b61a4ad4c261bf 1-14
+examples/basic-react/vite.config.ts
+  b1b61a4ad4c261bf 9-10
+formatted_analysis.md
+  b1b61a4ad4c261bf 1-130
+examples/basic-react/src/App.tsx
+  b1b61a4ad4c261bf 22-23,25,33,145
+examples/basic-react/src/App-simple.tsx
+  b1b61a4ad4c261bf 1-68
+packages/@opspilot/chat-react/components/OpsPilotChat.tsx
+  b1b61a4ad4c261bf 437,441-460,463-465,467-509,523-539,560-603,608,639
+packages/@opspilot/chat-react/package.json
+  b1b61a4ad4c261bf 6,9
+packages/@opspilot/chat-core/package.json
+  b1b61a4ad4c261bf 6,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "f69549e5b52b1d5d1e67581c5192ee18f5783538",
+  "prompts": {
+    "b1b61a4ad4c261bf": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ecbf48c8-19b6-402d-9fae-feae4ed08efa",
+        "model": "claude-4-sonnet"
+      },
+      "human_author": "Lakshmikanth <lakshmikanth.d@gdn-commerce.com>",
+      "messages": [],
+      "total_additions": 453,
+      "total_deletions": 22,
+      "accepted_lines": 450,
+      "overriden_lines": 0
+    }
+  }
+}
